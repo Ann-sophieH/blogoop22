@@ -11,16 +11,10 @@ $photo = Photo::find_by_id($_GET['id']); //http://localhost:63342/www/blogoop22/
 //HAAL EEN BESTAANDE PRIMARY KEY OP UIT FOTOS
 $comments = Comment::find_the_comment($photo->id); //comments hier gevuld vanuit db // FOREIGN KEY IN COMMENTS TABLE
 
-$cat_ids = Photo::find_the_category_id($photo_id);
+$all_categories = Category::find_all(); // categorien in sidebar
 
-$all_photo_categories = [];
-foreach ($cat_ids as $cat_id){
-    $cat_id = implode("", $cat_id);
-    $category_name =  Category::find_by_id($cat_id);
-    $all_photo_categories[] = $category_name;
-}
+$all_photo_categories = Photo::find_the_category_id($photo_id); //enkel categorieen gefilterde foto
 
-$all_categories = Category::find_all();
 
 
 
@@ -39,7 +33,6 @@ if(isset($_POST['submit'])){
     $author = "";
     $body = "";
 }
-
 ?>
 <!-- Page content-->
 <div class="container mt-5">
@@ -55,7 +48,8 @@ if(isset($_POST['submit'])){
                     <div class="text-muted fst-italic mb-2">Posted on January 1, 2021 by Start Bootstrap</div>
                     <!-- Post categories-->
                     <?php foreach ($all_photo_categories as $all_photo_category): //?>
-                    <a class="badge bg-info opacity-75 text-decoration-none link-light" href="#!"><?php echo $all_photo_category->category_name ?></a>
+                    <a href="categoryPhotos.php?id=<?php echo $all_photo_category->id ?>"  class="badge bg-info opacity-75 text-decoration-none link-light" href="#!"><?php echo $all_photo_category->category_name ?></a>
+
                     <?php endforeach;?>
 
 <!--                    <a class="badge bg-success opacity-75 text-decoration-none link-light" href="#!">Freebies</a>-->
@@ -72,6 +66,7 @@ if(isset($_POST['submit'])){
                 <div class="card bg-light">
                     <div class="card-body">
                         <!-- Comment form-->
+                       <?php if ($session->is_signed_in()) { ?>
                         <form method="post" class="mb-4">
                             <div class="mb-3">
                                 <label for="author" class="form-label">Author</label>
@@ -82,7 +77,7 @@ if(isset($_POST['submit'])){
                                 Submit
                             </button>
                         </form>
-
+                       <?php }?>
                         <!-- Single comment-->
                         <?php foreach ($comments as $comment): //?>
                         <div class="d-flex">

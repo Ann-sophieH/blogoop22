@@ -67,20 +67,33 @@
             }
         }
         public static function attachCategories($photoId, $categoryArray){
+            global $database;
             foreach ($categoryArray as $category){
-                global $database;
+
                 $sql = "INSERT INTO categories_photos (photo_id, category_id) VALUES ($photoId, $category)";
                 $database->query($sql);
             }
 
 
         }
-        public static function find_the_category_id($photo_id){
+        public static function find_the_category_id($photo_id){ //ARRAY TO STRING ERROR
             global $database;
             $sql = "SELECT category_id FROM categories_photos WHERE photo_id = " . $photo_id;
-            return  $database->query($sql);
+            $result =  $database->query($sql);
+            $rows = [];
+            while($row = $result->fetch_row()) {
+                $rows[] = $row;
+            }
 
+            $all_photo_categories = [];
+            foreach ($rows as $one_cat_id){
+                $cat_id = implode("", $one_cat_id);
+                $one_cat_id =  Category::find_by_id($cat_id);
+                $all_photo_categories[] = $one_cat_id;
+            }
+            return $all_photo_categories;
         }
+
         public function picture_path_and_placeholder(){
             return empty($this->filename) ? $this->picture_placeholder : $this->upload_directory.DS.$this->filename;
 

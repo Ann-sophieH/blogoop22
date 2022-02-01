@@ -22,6 +22,20 @@ if(isset($_POST['submit'])){
     $photo ->description = $_POST['description'];
     $photo->set_file($_FILES['file']);
 
+    $image_path = IMAGES_PATH . DS . $_FILES['file']['name'];
+    $image = new Imagick($image_path);
+    echo $image_path;
+    $imageprops = $image->getImageGeometry();
+    $width = $imageprops['width'];
+    $height = $imageprops['height'];
+    if ($width > $height) {
+        $newHeight = 800;
+        $newWidth = ($width / $height) * $newHeight;
+    } else {
+        $newWidth = 600;
+        $newHeight = ($height / $width) * $newWidth;
+    }
+
     if(!empty($_POST['category_name'])) { // cest quoi?
         foreach($_POST['category_name'] as $value){
             $value = $_POST['value'];
@@ -33,20 +47,21 @@ if(isset($_POST['submit'])){
         $message = join("<br>", $photo->errors);
     }
 
-
     $categoryArray = $_POST['categoryArray'];
     Photo::attachCategories($photo->id, $categoryArray);
+    $image->resizeImage(800, 600, imagick::FILTER_LANCZOS);
+    $image->writeImage(IMAGES_PATH . DS . '20201218_201817_resized.jpg');
 }
-
 
 ?>
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <h1 class=" p-3 mb-5 bg-white rounded">UPLOAD</h1>
+                <h1 class=" p-3 mt-5 bg-white rounded">UPLOAD</h1>
+                <hr>
             </div>
-            <form action="upload.php" method="post" enctype="multipart/form-data" class="row">
-                <div class="col-7">
+            <form action="upload_imagick.php" method="post" enctype="multipart/form-data" class="row mt-4">
+                <div class="col-6">
                 <div class="form-group">
                     <label for="title">title</label>
                     <input type="text" name="title" class="form-control">
@@ -62,11 +77,11 @@ if(isset($_POST['submit'])){
                 <div class="form-group">
                     <input type="file" name="file" class="form-control">
                 </div>
-                <input type="submit" name="submit" value="upload" class="btn btn-primary">
+                <input type="submit" name="submit" value="upload imagick" class="btn btn-primary">
                 </div>
-            <div class="col-4">
+            <div class="col-3">
 
-                <h2>Select the categories you want to add to your new post: </h2>
+                <p>Select the categories you want to add to your new post: </p>
                 <?php foreach ($categories as $category): ?>
                     <div class="form-check">
                         <label class="form-check-label">
@@ -74,12 +89,16 @@ if(isset($_POST['submit'])){
                         </label>
                     </div>
                 <?php endforeach;?>
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input" name="categoryArray[]" value="0">No categories
-                    </label>
-                </div>
+
             </div>
+                <div class="col-3">
+                    <p>select image sizes</p>
+                    <p>thumbnail (crop) </p>
+                    <hr>
+                    <p>medium (resize) </p>
+                    <hr>
+                    <p>large</p>
+                </div>
             </form>
         </div>
 

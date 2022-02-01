@@ -21,8 +21,8 @@
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Contact</a></li>
-                <li class="nav-item"><a class="nav-link active" aria-current="page" href="photo.php?id=<?php echo 1; ?>">Photo</a></li>
+                <li class="nav-item"><a class="nav-link" href="categories.php">Categories</a></li>
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="photos.php">Photo</a></li>
                 <li class="nav-item"><a class="nav-link " href="admin/index.php">Backend</a></li>
 
             </ul>

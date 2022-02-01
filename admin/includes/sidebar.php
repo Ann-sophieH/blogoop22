@@ -109,6 +109,11 @@
                 <span>Upload new picture</span></a>
         </li>
         <!-- Divider -->
+        <li class="nav-item">
+            <a class="nav-link" href="upload_imagick.php">
+                <i class="fas fa-fw fa-upload"></i>
+                <span>Upload new picture in different sizes</span></a>
+        </li>
         <hr class="sidebar-divider">
 
         <!-- Heading -->
@@ -128,6 +133,19 @@
             <a class="nav-link" href="add_category.php">
                 <i class="fas fa-fw fa-folder-plus"></i>
                 <span>Add new category</span></a>
+        </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            Comments
+        </div>
+        <!-- Nav Item - All pictures -->
+        <li class="nav-item">
+            <a class="nav-link" href="comments.php">
+                <i class="fas fa-fw fa-comment"></i>
+                <span>All comments</span></a>
         </li>
         <!-- Divider -->
         <hr class="sidebar-divider">

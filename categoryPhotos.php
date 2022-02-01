@@ -10,54 +10,38 @@ $category = Category::find_by_id($_GET['id']);
 $photos = Photo::find_all();
 
 $cat_id = $_GET['id'];
-$photo_ids = Category::find_the_photo_id($cat_id);
 
-$all_photos_of_category = [];
-foreach ($photo_ids as $photo_id){
-    $cat_id = implode("", $cat_id);
-    $category_name =  Category::find_by_id($cat_id);
-    $all_photos_of_category[] = $category_name;
-}
+$all_photos_of_category = Category::find_the_photo_id($cat_id);
 
 
 
 
-if(isset($_POST['submit'])){
-    $author = trim($_POST['author']);
-    $body = trim($_POST['body']);
 
-    $new_comment = Comment::create_comment($photo ->id, $author, $body);
-
-    if($new_comment && $new_comment->save()){
-        redirect("photo.php?id={$photo->id}");
-    }else{
-        $message = "There are problems saving! ";
-    }
-}else{
-    $author = "";
-    $body = "";
-}
 
 ?>
 <!-- Page content-->
 <div class="container mt-5">
+
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-10 d-flex ">
             <!-- Post content-->
-            <article>
-                <div class="card" style="width: 18rem;">
-                    <img src="<?php echo 'admin'.DS.$photo->picture_path(); ?>" class="card-img-top" alt="...">
+            <?php foreach ($all_photos_of_category as $one_photo_cat):
+               ;?>
+            <article class="col-6 col-md-4 g-2">
+                <div class="card " style="width: 18rem;">
+                    <img src="<?php echo 'admin'.DS.$one_photo_cat->picture_path(); ?>" class="card-img-top img-fluid" alt="...">
                     <div class="card-body">
-                        <h5 class="card-title"><?php echo $photo->title; ?></h5>
-                        <p class="card-text"><?php echo $photo->description; ?></p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <h5 class="card-title"><?php echo $one_photo_cat->title; ?></h5>
+                        <p class="card-text"><?php echo $one_photo_cat->description; ?></p>
+                        <a href="photo.php?id=<?php echo $one_photo_cat->id ?>" class="btn btn-primary">Go To blogpost</a>
                     </div>
                 </div>
             </article>
+            <?php endforeach; ?>
             <!-- Comments section-->
         </div>
         <!-- Side widgets-->
-        <div class="col-lg-4">
+        <div class="col-lg-2">
 
 
             <!-- Categories widget-->

@@ -13,4 +13,3 @@
     require_once(INCLUDES_PATH.DS."Category.php");
     require_once(INCLUDES_PATH.DS."Session.php");
 ?>
-<
