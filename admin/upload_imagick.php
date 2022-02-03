@@ -20,7 +20,7 @@ if(isset($_POST['submit'])){
     $photo->title = $_POST['title'];
     $photo->alternate_text = $_POST['alternate_text'];
     $photo ->description = $_POST['description'];
-    //$photo->set_file($_FILES['file']);
+    $photo->set_file($_FILES['file']);
     if(!empty($_POST['category_name'])) { // cest quoi?
         foreach($_POST['category_name'] as $value){
             $value = $_POST['value'];
@@ -31,12 +31,14 @@ if(isset($_POST['submit'])){
     }else{
         $message = join("<br>", $photo->errors);
     }
+    $photo->startX = $_POST['startX'];
+    $photo->startY = $_POST['startY'];
+    $photo->set_imgick($photo->filename, $photo->startX, $photo->startY);
 
-
-    $photo->set_file($_FILES['file']);
-    $photo->set_imgick($photo->filename);
     $categoryArray = $_POST['categoryArray'];
     Photo::attachCategories($photo->id, $categoryArray);
+
+
    /* $image_path = IMAGES_PATH . DS . $photo->filename;
     $image_md = new Imagick($image_path);
     echo $image_path;
@@ -95,12 +97,24 @@ if(isset($_POST['submit'])){
 
             </div>
                 <div class="col-3">
-                    <p>select image sizes</p>
-                    <p>thumbnail (crop) </p>
-                    <hr>
-                    <p>medium (resize) </p>
-                    <hr>
-                    <p>large</p>
+                <p>A thumbnail will be created from this image, select the position where you want the img to be cropped</p>
+
+                <div class="form-group">
+                    <label for="startX">Crop positioning TOP... </label>
+                    <select name="startX" class="custom-select" id="startX" >
+                            <option value="0">Left </option>
+                            <option value="125">Center</option>
+                            <option value="250">Right</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="startY" >Crop positioning LEFT... </label>
+                    <select name="startY" class="custom-select" id="startY" >
+                        <option value="0">Top </option>
+                        <option value="125">Center</option>
+                        <option value="250">Bottom</option>
+                    </select>
+                </div>
                 </div>
             </form>
         </div>

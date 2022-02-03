@@ -24,8 +24,8 @@
             UPLOAD_ERR_CANT_WRITE => "Failed to write to disk",
             UPLOAD_ERR_EXTENSION => "A php extension stopped your upload",
         );
-        public $newHeight;
-        public $newWidth;
+        public $startX;
+        public $startY;
 
         /***methodes***/
         public function set_file($file){
@@ -70,9 +70,23 @@
                 }
             }
         }
-        public function set_imgick($filename){
+        public function crop_thumbnail($filename, $startX, $startY){
+            $image_path = IMAGES_PATH . DS .$filename ;
+            $image = new Imagick($image_path);
+            $imageprops = $image->getImageGeometry();
+            $width = $imageprops['width']; //huidige afmetingen in variabelen steken
+            $height = $imageprops['height'];
+                if($width > $height){
+                    $image->cropImage(512, $height, $startX, $startY);
+                    $image->writeImage(IMAGES_PATH.DS. 'th_'.$filename);
+                }else{
+                    $image->cropImage($width, 512, $startX, $startY);
+                    $image->writeImage(IMAGES_PATH.DS. 'th_'.$filename);
+                }
 
-            $sizeArray= array(
+        }
+        public function set_imgick($filename){ //filename komt binnen uit upload_imagick.php
+            $sizeArray= array( //array gevuld met de prefix (sm_) en de nieuwe hoogte of breedte (afh van stand foto)
                 "sm_" => array(
                     'sm_',
                     512,
@@ -94,31 +108,28 @@
                     1080
                 )
             );
-            $image_path = IMAGES_PATH . DS .$filename ;
-            $image = new Imagick($image_path);
-            $imageprops = $image->getImageGeometry();
-            $width = $imageprops['width'];
+            $image_path = IMAGES_PATH . DS .$filename ; //path waar foto gevonden kan worden
+            $image = new Imagick($image_path); //nieuw object oproepen en in var $image steken
+            $imageprops = $image->getImageGeometry(); //built in functie om huidige afmetingen afbeelding opt halen
+            $width = $imageprops['width']; //huidige afmetingen in variabelen steken
             $height = $imageprops['height'];
-
-            foreach($sizeArray as $size){
-                if($width > $height){
-                    $newHeight = $size[1];
-                    $newWidth = ($width / $height) * $newHeight;
-                    $image->resizeImage($size[1], $newWidth, imagick::FILTER_LANCZOS, 1);
-                }else{
-                    $newWidth = $size[2];
-                    $newHeight = ($height / $width) * $newWidth;
-                    $image->resizeImage( $newHeight, $size[2], imagick::FILTER_LANCZOS, 1);
+            $i=0;
+            foreach($sizeArray as $size){ //loopen door multidimensionele array (hierboven hardcoded opgevuld)
+                // ($size zal 1 afmeting hebben per keer dat hij door de loop gaat)
+                $i++;
+                if($width > $height){ //foto ligt plat
+                    $newWidth = $size[1]; //nieuwe breedte is hoogste getal
+                    $newHeight = ($width / $height) * $newWidth; //nieuwe hoogte in verhouding tot b
+                    $image->resizeImage( $newHeight,$size[1], imagick::FILTER_LANCZOS, 1);
+                }else{ //foto staat recht
+                    $newHeight = $size[2]; // nieuwe hoogte = hoogste getal
+                    $newWidth = ($height / $width) * $newHeight;
+                    $image->resizeImage( $size[2], $newWidth, imagick::FILTER_LANCZOS, 1);
                 }
-
-                $image->writeImage(IMAGES_PATH.DS. $size[0].$this->filename);
-
+                $image->writeImage(IMAGES_PATH.DS. $size[0].$filename);//voor elke afmeting zal hij op einde
+                //van de loop een resized versie opladen naar doelmap ($size[0] -> hierin zit perfix md_ bv)
             }
         }
-
-           /* $image_md->writeImage(IMAGES_PATH . DS . 'md_' .$filename);
-            $image_sm->writeImage(IMAGES_PATH . DS . 'sm_' .$filename);
-            $image_lg->writeImage(IMAGES_PATH . DS . 'lg_' .$filename);*/
 
         public static function attachCategories($photoId, $categoryArray){
             global $database;
