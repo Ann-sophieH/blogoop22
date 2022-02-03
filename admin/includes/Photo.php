@@ -24,8 +24,9 @@
             UPLOAD_ERR_CANT_WRITE => "Failed to write to disk",
             UPLOAD_ERR_EXTENSION => "A php extension stopped your upload",
         );
-        public $startX;
-        public $startY;
+        //public $startX;
+
+
 
         /***methodes***/
         public function set_file($file){
@@ -71,22 +72,15 @@
             }
         }
         public function crop_thumbnail($filename, $startX, $startY){
-            $image_path = IMAGES_PATH . DS .$filename ;
+            $image_path = IMAGES_PATH . DS . 'sm_'. $filename ;
             $image = new Imagick($image_path);
-            $imageprops = $image->getImageGeometry();
-            $width = $imageprops['width']; //huidige afmetingen in variabelen steken
-            $height = $imageprops['height'];
-                if($width > $height){
-                    $image->cropImage(512, $height, $startX, $startY);
-                    $image->writeImage(IMAGES_PATH.DS. 'th_'.$filename);
-                }else{
-                    $image->cropImage($width, 512, $startX, $startY);
-                    $image->writeImage(IMAGES_PATH.DS. 'th_'.$filename);
-                }
 
+            if($image->cropImage(512, 512, $startX, $startY)){
+                $image->writeImage(IMAGES_PATH.DS. 'th_'.$filename);
+            }
         }
         public function set_imgick($filename){ //filename komt binnen uit upload_imagick.php
-            $sizeArray= array( //array gevuld met de prefix (sm_) en de nieuwe hoogte of breedte (afh van stand foto)
+            $sizeArray = array( //array gevuld met de prefix (sm_) en de nieuwe hoogte of breedte (afh van stand foto)
                 "sm_" => array(
                     'sm_',
                     512,
@@ -96,7 +90,7 @@
                     'md_',
                     800,
                     600
-                    ),
+                ),
                 "lg_" => array(
                     'lg_',
                     1024,

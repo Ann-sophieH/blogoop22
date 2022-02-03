@@ -31,9 +31,10 @@ if(isset($_POST['submit'])){
     }else{
         $message = join("<br>", $photo->errors);
     }
-    $photo->startX = $_POST['startX'];
-    $photo->startY = $_POST['startY'];
-    $photo->set_imgick($photo->filename, $photo->startX, $photo->startY);
+    $startX = $_POST['startX'];
+    $startY = $_POST['startY'];
+    $photo->set_imgick($photo->filename);
+    $photo->crop_thumbnail($photo->filename,$startX,$startY);
 
     $categoryArray = $_POST['categoryArray'];
     Photo::attachCategories($photo->id, $categoryArray);
