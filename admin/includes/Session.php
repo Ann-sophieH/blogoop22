@@ -47,8 +47,16 @@ class Session{
     }
     function __construct(){
         session_start();
+        //$this->visitor_count();
         $this->check_the_login();
         $this->check_message();
+    }
+    public function visitor_count(){ //per refresh = nieuwe session
+        if(isset($_SESSION['count'])){ //als er al een sessie is dan zla hij een nieuwe bezoeker bijtellen per refresh
+            return $this->count = $_SESSION['count']++;
+        }else{ // andere geval tellen vanaf 1
+            return $_SESSION['count'] = 1;
+        }
     }
 }
 $session = new Session();

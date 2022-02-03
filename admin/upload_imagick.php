@@ -20,22 +20,7 @@ if(isset($_POST['submit'])){
     $photo->title = $_POST['title'];
     $photo->alternate_text = $_POST['alternate_text'];
     $photo ->description = $_POST['description'];
-    $photo->set_file($_FILES['file']);
-
-    $image_path = IMAGES_PATH . DS . $_FILES['file']['name'];
-    $image = new Imagick($image_path);
-    echo $image_path;
-    $imageprops = $image->getImageGeometry();
-    $width = $imageprops['width'];
-    $height = $imageprops['height'];
-    if ($width > $height) {
-        $newHeight = 800;
-        $newWidth = ($width / $height) * $newHeight;
-    } else {
-        $newWidth = 600;
-        $newHeight = ($height / $width) * $newWidth;
-    }
-
+    //$photo->set_file($_FILES['file']);
     if(!empty($_POST['category_name'])) { // cest quoi?
         foreach($_POST['category_name'] as $value){
             $value = $_POST['value'];
@@ -47,10 +32,28 @@ if(isset($_POST['submit'])){
         $message = join("<br>", $photo->errors);
     }
 
+
+    $photo->set_file($_FILES['file']);
+    $photo->set_imgick($photo->filename);
     $categoryArray = $_POST['categoryArray'];
     Photo::attachCategories($photo->id, $categoryArray);
-    $image->resizeImage(800, 600, imagick::FILTER_LANCZOS);
-    $image->writeImage(IMAGES_PATH . DS . '20201218_201817_resized.jpg');
+   /* $image_path = IMAGES_PATH . DS . $photo->filename;
+    $image_md = new Imagick($image_path);
+    echo $image_path;
+    $imageprops_md = $image_md->getImageGeometry();
+    $width_md = $imageprops_md['width'];
+    $height_md = $imageprops_md['height'];
+    if ($width_md > $height_md) {
+        $newHeight_md = 800;
+        $newWidth_md = ($width_md / $height_md) * $newHeight_md;
+    } else {
+        $newWidth_md = 600;
+        $newHeight_md = ($height_md / $width_md) * $newWidth_md;
+    }
+    $image_md->resizeImage(800, $newHeight_md, imagick::FILTER_LANCZOS, 1);
+    $image_md->writeImage(IMAGES_PATH . DS . 'md_' .$filename);
+    $image_sm->writeImage(IMAGES_PATH . DS . 'sm_' .$filename);
+            $image_lg->writeImage(IMAGES_PATH . DS . 'lg_' .$filename);;*/
 }
 
 ?>

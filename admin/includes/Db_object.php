@@ -100,7 +100,15 @@
             }
             return $clean_properties;
         }
+        public static function count_all(){
+            global $database;
+            $sql = "SELECT COUNT(*) FROM " . static::$db_table; //aantal is 10
+            $result_set = $database->query($sql); // in var zit alles van de gevraagde tabel (aantal) komt ALTIJD als array
+            $row = mysqli_fetch_array($result_set); // opl array in rij steken
 
+            return array_shift($row); //eerste element array uithalen -> maakt er string van ARRAY TO STRING
+            //return $row[0] werkt ook
+        }
 
 
     }

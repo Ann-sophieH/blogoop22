@@ -24,6 +24,8 @@
             UPLOAD_ERR_CANT_WRITE => "Failed to write to disk",
             UPLOAD_ERR_EXTENSION => "A php extension stopped your upload",
         );
+        public $newHeight;
+        public $newWidth;
 
         /***methodes***/
         public function set_file($file){
@@ -40,12 +42,14 @@
                 $this->filename = $without_extension.$time.'.'.$extension;
                 $this->type = $file['type'];
                 $this->size = $file['size'];
-                $this->tmp_path = $file['tmp_name'];}
+                $this->tmp_path = $file['tmp_name'];
+            }
+
         }
         public function save(){
             if($this->id){
                 $this->update();
-                unset($this->tmp_path); //hier dan ook vr server? vrgn tom
+                 //hier dan ook vr server? vrgn tom
             }else{
                 if(!empty($this->errors)){
                     return false;}
@@ -58,7 +62,7 @@
                     return false;}
                 if(move_uploaded_file($this->tmp_path,$target_path)){//upload in de images map
                     if($this->create()){//aanmaken in de database
-                        unset($this->tmp_path);
+                     //   unset($this->tmp_path);
                         return true;}
                 }else{
                     $this->errors[] = "This folder has no write rights";
@@ -66,6 +70,56 @@
                 }
             }
         }
+        public function set_imgick($filename){
+
+            $sizeArray= array(
+                "sm_" => array(
+                    'sm_',
+                    512,
+                    512
+                ),
+                "md_" => array(
+                    'md_',
+                    800,
+                    600
+                    ),
+                "lg_" => array(
+                    'lg_',
+                    1024,
+                    768
+                ),
+                "xl_" =>array(
+                    'xl_',
+                    1920,
+                    1080
+                )
+            );
+            $image_path = IMAGES_PATH . DS .$filename ;
+            $image = new Imagick($image_path);
+            $imageprops = $image->getImageGeometry();
+            $width = $imageprops['width'];
+            $height = $imageprops['height'];
+
+            foreach($sizeArray as $size){
+                if($width > $height){
+                    $newHeight = $size[1];
+                    $newWidth = ($width / $height) * $newHeight;
+                    $image->resizeImage($size[1], $newWidth, imagick::FILTER_LANCZOS, 1);
+                }else{
+                    $newWidth = $size[2];
+                    $newHeight = ($height / $width) * $newWidth;
+                    $image->resizeImage( $newHeight, $size[2], imagick::FILTER_LANCZOS, 1);
+                }
+
+                $image->writeImage(IMAGES_PATH.DS. $size[0].$this->filename);
+
+            }
+        }
+
+           /* $image_md->writeImage(IMAGES_PATH . DS . 'md_' .$filename);
+            $image_sm->writeImage(IMAGES_PATH . DS . 'sm_' .$filename);
+            $image_lg->writeImage(IMAGES_PATH . DS . 'lg_' .$filename);*/
+
         public static function attachCategories($photoId, $categoryArray){
             global $database;
             foreach ($categoryArray as $category){

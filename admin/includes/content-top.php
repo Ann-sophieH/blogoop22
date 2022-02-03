@@ -1,5 +1,13 @@
+<?php
+$aantalUsers = User::find_all(); //hier variabelen invoeren want content top zal dit kennen w is erboven ingeladen
+$aantalComments = Comment::find_all();
+$aantalPhotos = Photo::find_all();
+$aantalCategories = Category::find_all();
+?>
+
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
+
     <!-- Main Content -->
     <div id="content">
 
@@ -13,7 +21,7 @@
 
             <!-- Topbar Search -->
             <form
-                class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                    class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                 <div class="input-group">
                     <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
                            aria-label="Search" aria-describedby="basic-addon2">
@@ -175,7 +183,7 @@
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas</span>
+                        <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $_SESSION['username'] ?></span>
                         <img class="img-profile rounded-circle"
                              src="img/undraw_profile.svg">
                     </a>
@@ -214,87 +222,82 @@
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
                 <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                        class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+                            class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
             </div>
 
             <!-- Content Row -->
             <div class="row">
 
                 <!-- Earnings (Monthly) Card Example -->
-                <div class=" col-md-4 mb-4">
+                <a href="users.php"  class="col-md-4  mb-4 text-decoration-none">
+
                     <div class="card border-left-primary shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                        Earnings (Monthly)</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                        Users</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?php echo User::count_all(); ?></div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                    <i class="fas fa-users fa-2x text-gray-300"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </a>
                 <!-- Earnings (Monthly) Card Example -->
-                <div class=" col-md-4 mb-4">
+                <a href="comments.php"  class="col-md-4 mb-4 text-decoration-none">
+
                     <div class="card border-left-success shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Earnings (Annual)</div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                        Comments</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800"><?= Comment::count_all() ?></div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                    <i class="fas fa-comment fa-2x text-gray-300"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card shadow col-md-4 mb-4">
-                    <div class="card-header py-2">
-                        <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                    </div>
-                    <div class="card-body">
-                        <p>SB Admin 2 makes use of Bootstrap 4  classes !</p>
 
-                    </div>
-                </div>
-<!--                 Earnings (Monthly) Card Example
-                <div class="col-xl-3 col-md-6 mb-4">
-                    <div class="card border-left-info shadow h-100 py-2">
+                </a>
+                <!-- Earnings (Monthly) Card Example -->
+                <a href="photos.php" class="col-xl-4 col-md-6 mb-4 text-decoration-none">
+
+                    <div class="card border-left-warning shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Photos
                                     </div>
                                     <div class="row no-gutters align-items-center">
                                         <div class="col-auto">
-                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= Photo::count_all(); ?></div>
                                         </div>
-                                        <div class="col">
+                                        <!--<div class="col">
                                             <div class="progress progress-sm mr-2">
                                                 <div class="progress-bar bg-info" role="progressbar"
-                                                     style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                     aria-valuemax="100"></div>
+                                                     style="width: 50%" aria-valuenow="<?php /*echo count($aantalPhotos) */?>" aria-valuemin="0"
+                                                     aria-valuemax="1000"></div>
                                             </div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                    <i class="fas fa-camera-retro fa-2x text-gray-300"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                 Pending Requests Card Example
-                <div class="col-xl-3 col-md-6 mb-4">
+                </a>
+                <!-- Pending Requests Card Example -->
+                <!--<div class="col-xl-3 col-md-6 mb-4">
                     <div class="card border-left-warning shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
@@ -309,6 +312,5 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
--->
+                </div>-->
+
