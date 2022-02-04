@@ -71,13 +71,11 @@
                 }
             }
         }
-        public function crop_thumbnail($filename, $startX, $startY){
-            $image_path = IMAGES_PATH . DS . 'sm_'. $filename ;
-            $image = new Imagick($image_path);
+        public function crop_thumbnail($imagecrop,  $startX, $startY,$filename){
 
-            if($image->cropImage(512, 512, $startX, $startY)){
-                $image->writeImage(IMAGES_PATH.DS. 'th_'.$filename);
-            }
+            $imagecrop->cropImage(512, 512, $startX,$startY);
+
+            $imagecrop->writeImage(IMAGES_PATH.DS.'th_'.$filename);
         }
         public function set_imgick($filename){ //filename komt binnen uit upload_imagick.php
             $sizeArray = array( //array gevuld met de prefix (sm_) en de nieuwe hoogte of breedte (afh van stand foto)
@@ -107,22 +105,22 @@
             $imageprops = $image->getImageGeometry(); //built in functie om huidige afmetingen afbeelding opt halen
             $width = $imageprops['width']; //huidige afmetingen in variabelen steken
             $height = $imageprops['height'];
-            $i=0;
             foreach($sizeArray as $size){ //loopen door multidimensionele array (hierboven hardcoded opgevuld)
                 // ($size zal 1 afmeting hebben per keer dat hij door de loop gaat)
-                $i++;
                 if($width > $height){ //foto ligt plat
                     $newWidth = $size[1]; //nieuwe breedte is hoogste getal
-                    $newHeight = ($width / $height) * $newWidth; //nieuwe hoogte in verhouding tot b
-                    $image->resizeImage( $newHeight,$size[1], imagick::FILTER_LANCZOS, 1);
+                    $newHeight = ($newWidth / $width) * $height; //nieuwe hoogte in verhouding tot breedte
+                    $image->resizeImage( $size[1],$newHeight, imagick::FILTER_LANCZOS, 1);
                 }else{ //foto staat recht
                     $newHeight = $size[2]; // nieuwe hoogte = hoogste getal
-                    $newWidth = ($height / $width) * $newHeight;
-                    $image->resizeImage( $size[2], $newWidth, imagick::FILTER_LANCZOS, 1);
+                    $newWidth = ($newHeight / $height) * $width;
+                    $image->resizeImage($newWidth, $size[2],  imagick::FILTER_LANCZOS, 1);
                 }
                 $image->writeImage(IMAGES_PATH.DS. $size[0].$filename);//voor elke afmeting zal hij op einde
                 //van de loop een resized versie opladen naar doelmap ($size[0] -> hierin zit perfix md_ bv)
+
             }
+            return true;
         }
 
         public static function attachCategories($photoId, $categoryArray){

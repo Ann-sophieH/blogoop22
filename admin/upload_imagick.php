@@ -31,32 +31,27 @@ if(isset($_POST['submit'])){
     }else{
         $message = join("<br>", $photo->errors);
     }
-    $startX = $_POST['startX'];
-    $startY = $_POST['startY'];
-    $photo->set_imgick($photo->filename);
-    $photo->crop_thumbnail($photo->filename,$startX,$startY);
+    $startX =  (int) $_POST[ 'startX'];
+    $startY = (int)$_POST['startY'];
+    $photo->set_imgick($photo->filename);//resizes all pictures in 4 sizes
+
+    $image_path = IMAGES_PATH . DS . $photo->filename ;
+    $imagecrop = new Imagick($image_path);
+    $thumbnail = 512;
+    $width = $imagecrop->getImageWidth();
+    $height = $imagecrop->getImageHeight();
+    $imagecrop->cropImage($thumbnail, $thumbnail, $startX,$startY);
+    $imagecrop->writeImage(IMAGES_PATH.DS.'th_'.$photo->filename);
+
+
+
+
+       // $photo->crop_thumbnail($imagecrop,$startX,$startY, $photo->filename); //crops those pictures
+
+
 
     $categoryArray = $_POST['categoryArray'];
     Photo::attachCategories($photo->id, $categoryArray);
-
-
-   /* $image_path = IMAGES_PATH . DS . $photo->filename;
-    $image_md = new Imagick($image_path);
-    echo $image_path;
-    $imageprops_md = $image_md->getImageGeometry();
-    $width_md = $imageprops_md['width'];
-    $height_md = $imageprops_md['height'];
-    if ($width_md > $height_md) {
-        $newHeight_md = 800;
-        $newWidth_md = ($width_md / $height_md) * $newHeight_md;
-    } else {
-        $newWidth_md = 600;
-        $newHeight_md = ($height_md / $width_md) * $newWidth_md;
-    }
-    $image_md->resizeImage(800, $newHeight_md, imagick::FILTER_LANCZOS, 1);
-    $image_md->writeImage(IMAGES_PATH . DS . 'md_' .$filename);
-    $image_sm->writeImage(IMAGES_PATH . DS . 'sm_' .$filename);
-            $image_lg->writeImage(IMAGES_PATH . DS . 'lg_' .$filename);;*/
 }
 
 ?>
@@ -103,17 +98,17 @@ if(isset($_POST['submit'])){
                 <div class="form-group">
                     <label for="startX">Crop positioning TOP... </label>
                     <select name="startX" class="custom-select" id="startX" >
-                            <option value="0">Left </option>
-                            <option value="125">Center</option>
-                            <option value="250">Right</option>
+                            <option value="<?= 0?>">Left </option>
+                            <option value="<?= ($width-$thumbnail)/2 ?>">Center</option>
+                            <option value="<?=  ($width-$thumbnail) ?>">Right</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="startY" >Crop positioning LEFT... </label>
                     <select name="startY" class="custom-select" id="startY" >
-                        <option value="0">Top </option>
-                        <option value="125">Center</option>
-                        <option value="250">Bottom</option>
+                        <option value="<?= 0 ?>">Top </option>
+                        <option value="<?= ($height-$thumbnail)/2 ?>">Center</option>
+                        <option value="<?= ($height-$thumbnail) ?>">Bottom</option>
                     </select>
                 </div>
                 </div>
