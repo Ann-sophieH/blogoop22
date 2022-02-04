@@ -31,24 +31,20 @@ if(isset($_POST['submit'])){
     }else{
         $message = join("<br>", $photo->errors);
     }
-    $startX =  (int) $_POST[ 'startX'];
-    $startY = (int)$_POST['startY'];
+
     $photo->set_imgick($photo->filename);//resizes all pictures in 4 sizes
 
-    $image_path = IMAGES_PATH . DS . $photo->filename ;
-    $imagecrop = new Imagick($image_path);
-    $thumbnail = 512;
-    $width = $imagecrop->getImageWidth();
+    $image_path = IMAGES_PATH . DS .'md_'. $photo->filename ; //sets path
+    $imagecrop = new Imagick($image_path); //nieuwe imagick vullen
+    $thumbnail = 512; //grootte thumbnail
+    $width = $imagecrop->getImageWidth(); //afmetingen ophalen
     $height = $imagecrop->getImageHeight();
-    $imagecrop->cropImage($thumbnail, $thumbnail, $startX,$startY);
-    $imagecrop->writeImage(IMAGES_PATH.DS.'th_'.$photo->filename);
+    $startX =  (int) $_POST[ 'startX']; //coordinaten x en y as ophalen (berekend in formulier)
+    $startY = (int)$_POST['startY'];
+    $imagecrop->cropImage($thumbnail, $thumbnail, $startX,$startY); //crop
+    $imagecrop->writeImage(IMAGES_PATH.DS.'th_'.$photo->filename); //write cropped img
 
-
-
-
-       // $photo->crop_thumbnail($imagecrop,$startX,$startY, $photo->filename); //crops those pictures
-
-
+    // $photo->crop_thumbnail($imagecrop,$startX,$startY, $photo->filename); //crops those pictures
 
     $categoryArray = $_POST['categoryArray'];
     Photo::attachCategories($photo->id, $categoryArray);
@@ -76,9 +72,11 @@ if(isset($_POST['submit'])){
                     <textarea class="form-control" name="description" rows="3"></textarea>
                 </div>
                 <div class="form-group">
-                    <input type="file" name="file" class="form-control">
+                    <div class="form-group">
+                        <input type="file" name="file" class="form-control">
+                    </div>
                 </div>
-                <input type="submit" name="submit" value="upload imagick" class="btn btn-primary">
+                <input type="submit" name="submit" value="upload imagick" class="btn btn-primary" data-toggle="modal" data-target="#modal">
                 </div>
             <div class="col-3">
 
@@ -99,23 +97,24 @@ if(isset($_POST['submit'])){
                     <label for="startX">Crop positioning TOP... </label>
                     <select name="startX" class="custom-select" id="startX" >
                             <option value="<?= 0?>">Left </option>
-                            <option value="<?= ($width-$thumbnail)/2 ?>">Center</option>
-                            <option value="<?=  ($width-$thumbnail) ?>">Right</option>
+                            <option value="<?= ($width-$thumbnail)/2 ?>">Center</option> <!--helft van de breedte min helft van de foto zelf -->
+                            <option value="<?=  ($width/2) ?>">Right</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="startY" >Crop positioning LEFT... </label>
                     <select name="startY" class="custom-select" id="startY" >
                         <option value="<?= 0 ?>">Top </option>
-                        <option value="<?= ($height-$thumbnail)/2 ?>">Center</option>
-                        <option value="<?= ($height-$thumbnail) ?>">Bottom</option>
+                        <option value="<?= ($height-$thumbnail)/2  ?>">Center</option>
+                        <option value="<?= ($height/2) ?>">Bottom</option>
                     </select>
                 </div>
                 </div>
             </form>
         </div>
 
-    </div>
+        </div>
+
 <?php
 include("includes/footer.php");
 ?>

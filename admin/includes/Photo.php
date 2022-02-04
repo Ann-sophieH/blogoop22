@@ -71,10 +71,14 @@
                 }
             }
         }
-        public function crop_thumbnail($imagecrop,  $startX, $startY,$filename){
+        public function crop_thumbnail($imagecrop,  $startX, $startY,$filename){ //
 
-            $imagecrop->cropImage(512, 512, $startX,$startY);
 
+            //$imagecrop = new Imagick($image_path);
+            $thumbnail = 512;
+           // $width = $imagecrop->getImageWidth();
+            //$height = $imagecrop->getImageHeight();
+            $imagecrop->cropImage($thumbnail, $thumbnail, $startX,$startY);
             $imagecrop->writeImage(IMAGES_PATH.DS.'th_'.$filename);
         }
         public function set_imgick($filename){ //filename komt binnen uit upload_imagick.php

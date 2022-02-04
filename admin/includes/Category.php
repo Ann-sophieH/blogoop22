@@ -35,16 +35,16 @@ class Category extends Db_object
         $result =  $database->query($sql);
         $rows = [];
         while($row = $result->fetch_row()) { //queryresult loopen en rij per rij in $rows[] steken
-            $rows[] = $row;
+            $rows[] = $row;//opvangen
         }
 
         $all_photo_categories = [];
-        foreach ($rows as $one_cat_id){ //
-            $cat_id = implode("", $one_cat_id);//turns array into string
+        foreach ($rows as $one_cat_id){ //loopen door array met alle resultaatrijen in
+            $cat_id = implode("", $one_cat_id);//turns array into string door de seperator te verwijderen
             $one_cat_id =  Category::find_by_id($cat_id);//string is used to run query
-            $all_photo_categories[] = $one_cat_id;
+            $all_photo_categories[] = $one_cat_id; //result van de loop opvangen in array
         }
-        return $all_photo_categories;
+        return $all_photo_categories;//functie retourt uiteindelijk array met alle ids van categorieen die aan de foto gelinkt zijn
     }
 
 }

@@ -26,7 +26,7 @@ include("includes/content-top.php");
             <?php endif; ?>
             <div class="row justify-content-between mb-5 mt-5">
                 <h1>ALL CATEGORIES</h1>
-                <button class="btn btn-outline-primary font-weight-bold rounded-pill"><a href="add_users.php"><i class="fas fa-user-plus mr-3"></i>Create new category</a> </button>
+                <button class="btn btn-outline-primary font-weight-bold rounded-pill"><a href="add_category.php"><i class="fas fa-user-plus mr-3"></i>Create new category</a> </button>
             </div>
             <div class="row">
            <?php foreach ($categories as $category): ?>

@@ -27,4 +27,5 @@ ob_start();
 
     <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 
+    <link rel="stylesheet" href="css/styles.css">
 </head>

@@ -11,7 +11,7 @@ $i = 0 //i op 0 zetten om de loop een teller te geven zodat je aan eerste elemen
     <div class="row">
         <div class="col-2"></div>
         <div class="col-8">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <ul class="nav nav-pills mt-5 mb-3 justify-content-between " id="pills-tab" role="tablist">
                 <?php foreach ($categories as $category): $i++ ?><!-- i om eerste element van de loop te vinden en active class aan te binden -->
 
                     <li class="nav-item" role="presentation"><!-- als i=1 is dan komt active class er bij -->
@@ -32,12 +32,12 @@ $i = 0 //i op 0 zetten om de loop een teller te geven zodat je aan eerste elemen
                 <div class="tab-pane fade <?php if($i == 1)  echo "show active" ?>" id="pills-<?php echo $category->category_name ?>" role="tabpanel"
                      aria-labelledby="pills-<?php echo $category->category_name ?>-tab" >
 
-                        <div class="col-lg-10 d-flex ">
+                        <div class="row row-cols-4">
                             <?php $all_photos_of_category = Category::find_the_photo_id($category->id);
 
                             ?>
                             <?php foreach ($all_photos_of_category as $one_photo_cat): ?> <!-- fotos van cat 1 voor 1 in cards laden -->
-                                <article class="col-6 col-md-4 g-2">
+                                <article class="col g-2">
                                     <div class="card " style="width: 18rem;">
                                         <img src="<?php echo 'admin' . DS . $one_photo_cat->picture_path(); ?>"
                                              class="card-img-top img-fluid" alt="...">

@@ -42,10 +42,10 @@ if(isset($_POST['add_category'])){
     <div class="row">
         <div class="col-12">
             <h2 class="mt-5 mb-4">Categories previously created: </h2>
-            <div class="">
+            <div class="row row-cols-3">
             <?php foreach ($categories as $category): ?>
                 <!-- Card Example -->
-                <div class="col-md-6 mb-4">
+                <div class="col mb-4">
                     <div class="card border-left-secondary shadow h-100 py-2">
                         <div class="card-body">
                             <div class=" no-gutters align-items-center">
