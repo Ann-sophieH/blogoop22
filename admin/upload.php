@@ -22,7 +22,7 @@ if(isset($_POST['submit'])){
     $photo ->description = $_POST['description'];
     $photo->set_file($_FILES['file']);
 
-    if(!empty($_POST['category_name'])) { // cest quoi?
+    if(!empty($_POST['category_name'])) {
         foreach($_POST['category_name'] as $value){
             $value = $_POST['value'];
         }

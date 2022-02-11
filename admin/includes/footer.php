@@ -61,11 +61,22 @@
 
 <!-- Rich text editor -->
 <script src="https://cdn.ckeditor.com/4.17.1/basic/ckeditor.js"></script>
+<script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.js"></script>
+<script>
+
+</script>
+<script>
+    $(document).ready( function () {
+        $('#example').DataTable();
+    } );
+</script>
 <script>
     CKEDITOR.replace( 'editor1' );
     //var description;
     //description = editor.dataProcessor.toDataFormat(description);
 </script>
+
 </body>
 
 </html>

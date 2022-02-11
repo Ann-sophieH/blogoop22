@@ -97,6 +97,32 @@ class User extends Db_object{
             return false;
         }
     }
+    public static function get_user_role($user_id){
+        global $database;
+        $sql = "SELECT role_id FROM user_roles WHERE user_id = " . $user_id;
+        $result =  $database->query($sql);
+        $rows = [];
+        while($row = $result->fetch_row()) {
+            $rows[] = $row;
+        }
+
+        $user_roles = [];
+        foreach ($rows as $one_role){
+            $role_ids = implode("", $one_role);
+            $one_role =  Role::find_by_id($role_ids);
+            $user_roles[] = $one_role;
+        }
+        return $user_roles;
+    }
+    public static function attach_role($user_id, $role_ids){
+            global $database;
+            foreach ($role_ids as $role_id){
+                $sql = "INSERT INTO user_roles (user_id, role_id) VALUES ($user_id, $role_id)";
+                $database->query($sql);
+            }
+    }
+
+
 
 
 

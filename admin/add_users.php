@@ -11,6 +11,8 @@ if(!$session->is_signed_in()){//testen of er een user ingelogd is (is er een ses
 /**vanaf hier code formulier*/
 
 $user = new User();
+$roles = new Role();
+$roles = Role::find_all();
 
 if(isset($_POST['add_user'])){
 
@@ -27,6 +29,9 @@ if(isset($_POST['add_user'])){
     }else{
         $_SESSION['msg_bad'] = "user could not be added" ;
     }
+
+    $role_ids = $_POST['role_ids'];
+    User::attach_role($user->id,$role_ids);
 }
 
 ?>
@@ -51,7 +56,16 @@ if(isset($_POST['add_user'])){
                                 <label for="last_name">Last name</label>
                                 <input type="text" name="last_name" class="form-control">
                             </div>
-                            <div class="form-group">
+                            <p>Roles</p>
+                            <?php foreach ($roles as $role): ?>
+                                <div class="form-check pb-2">
+
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" name="role_ids[]" value="<?php echo $role->id;?>"><?php echo $role->role;?>
+                                    </label>
+                                </div>
+                            <?php endforeach;?>
+                            <div class="form-group pt-2">
                                 <label for="password">password</label>
                                 <input type="password" name="password" class="form-control" >
                             </div>

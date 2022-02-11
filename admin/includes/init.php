@@ -8,8 +8,11 @@
     require_once(INCLUDES_PATH.DS."Database.php"); //b
     require_once(INCLUDES_PATH.DS."Db_object.php"); //Bovenaan
     require_once(INCLUDES_PATH.DS."User.php");
+    require_once(INCLUDES_PATH.DS."Role.php");
     require_once(INCLUDES_PATH.DS."Photo.php");
     require_once(INCLUDES_PATH.DS."Comment.php");
+    require_once(INCLUDES_PATH.DS."Reply.php");
     require_once(INCLUDES_PATH.DS."Category.php");
     require_once(INCLUDES_PATH.DS."Session.php");
+    require_once(INCLUDES_PATH.DS."Paginate.php");
 ?>

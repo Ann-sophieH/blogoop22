@@ -5,6 +5,16 @@ if(!$session->is_signed_in()){//testen of er een user ingelogd is (is er een ses
 }
 
 $photos = Photo::find_all();
+$page = !empty($_GET['page']) ? (int)$_GET['page'] : 1;
+$items_per_page = 4;
+$items_total_count = Photo::count_all();
+$paginate = new Paginate($page, $items_per_page, $items_total_count);
+
+$sql = "SELECT * FROM photos ";
+$sql .= "LIMIT {$items_per_page} ";
+$sql .= "OFFSET {$paginate->offset()}";
+$photos = Photo::find_this_query($sql);
+
 
 
 
@@ -72,9 +82,30 @@ include("includes/content-top.php");
         </div>
     </div>
 </div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <?php
+        if ($paginate->page_total() > 1) {
+            if ($paginate->has_previous()) {
+                echo "<li class='previous page-item'><a href='photos.php?page={$paginate->previous()}' class='page-link'>Previous</a></li>";
+            }
+            for ($i = 1; $i <= $paginate->page_total(); $i++) {
+                if ($i == $paginate->current_page) {
+                    echo "<li class='active page-item'><a href='photos.php?page={$i}' class='page-link'>{$i}</a></li>";
+                } else {
+                    echo "<li class='page-item'><a href='photos.php?page={$i}'class='page-link'>{$i}</a></li>";
+                }
+            }
+            if ($paginate->has_next()) {
+                echo "<li class=' page-item'><a href='photos.php?page={$paginate->next()}' class='page-link'>Next</a></li>";
+            }
+        }
+        ?>
+
+    </ul>
+</nav>
 
 
 <?php
-
 include("includes/footer.php");
 ?>

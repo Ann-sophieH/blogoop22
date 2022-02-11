@@ -37,7 +37,8 @@
                     $the_object->$the_attribute = $value;
                 }
             }
-            return $the_object;}
+            return $the_object;
+        }
         /**CRUD**/
         public function create(){
             global $database;

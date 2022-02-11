@@ -1,5 +1,7 @@
 <?php
+ob_start(); //dient als opvangbak voor de reply (omdat headers niet kunnen
 include("includes/header.php");
+
 require_once("admin/includes/init.php"); //want hebt comment class uit backend nodig
 if(empty($_GET['id'])){
     redirect("index.php");
@@ -23,7 +25,6 @@ if(isset($_POST['submit'])){
     $body = trim($_POST['body']);
 
     $new_comment = Comment::create_comment($photo ->id, $author, $body);
-
     if($new_comment && $new_comment->save()){
         redirect("photo.php?id={$photo->id}");
     }else{
@@ -33,6 +34,7 @@ if(isset($_POST['submit'])){
     $author = "";
     $body = "";
 }
+
 ?>
 <!-- Page content-->
 <div class="container mt-5">
@@ -73,21 +75,72 @@ if(isset($_POST['submit'])){
                                 <input type="text" class="form-control" name="author" placeholder="Author name please...">
                             </div>
                             <textarea class="form-control mb-3" rows="3" name="body" placeholder="Join the discussion and leave a comment!"></textarea>
-                            <button type="submit" name="submit" class="btn btn-outline-primary mb-2">
+                            <button type="submit" name="submit" class="btn btn-outline-success opacity-75 mb-2">
                                 Submit
                             </button>
                         </form>
                        <?php }?>
                         <!-- Single comment-->
                         <?php foreach ($comments as $comment): //?>
-                        <div class="d-flex">
+                        <div class="d-flex mb-4">
+                            <!-- Parent comment-->
                             <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
                             <div class="ms-3">
                                 <div class="fw-bold"><?php echo $comment->author ?></div>
                                 <p><?php echo $comment->body ?></p>
+                                <!-- Reply form: only accessible when user is logged in -->
+                                <?php  if ($session->is_signed_in()) { ?>
+                                <button class="btn btn-outline-success opacity-75" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $comment->id ?>" aria-expanded="false" aria-controls="collapseExample">
+                                    reply
+                                </button>
+                            <div class="collapse" id="collapse<?= $comment->id ?>">
+                                <div class="card card-body bg-light mt-2 border-none shadow">
+                                    <form method="post" class="mb-4 row ">
+                                        <div class="mb-3">
+                                            <label for="r_author" class="form-label">Author</label>
+                                            <input type="text" class="form-control" name="r_author" placeholder="Author name please...">
+                                        </div>
+                                        <textarea class="form-control mb-3" rows="3" name="r_body" placeholder="Join the discussion and leave a reply!"></textarea>
+                                        <button type="submit" name="submit_reply<?=$comment->id?>" class="btn btn-outline-success opacity-75 mb-2 col-2">
+                                            Submit
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            <?php }?>
+                                <!-- Child comment 1-->
+                                <?php
+                                $replies = Reply::find_the_reply($comment->id);
+                                $comment_id = $comment->id;
+                                if(isset($_POST["submit_reply{$comment->id}"])){
+
+                                    $replyAuthor = trim($_POST['r_author']);
+                                    $replyBody = trim($_POST['r_body']);
+                                    $new_reply = Reply::create_reply($comment_id, $replyAuthor, $replyBody);
+                                    if($new_reply && $new_reply->save()){
+                                        redirect("photo.php?id={$photo->id}");
+                                    }else{
+                                        $message = "There are problems saving! ";
+                                    }
+
+                                }
+
+                                foreach ($replies as $reply): //?>
+                                <div class="d-flex mt-4">
+                                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
+                                    <div class="ms-3">
+                                        <div class="fw-bold"><?= $reply->r_author ?></div>
+                                        <div class="row">
+                                        <p><?php echo $reply->r_body ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <?php  endforeach; ?>
                             </div>
                         </div>
                          <?php endforeach; ?>
+
                     </div>
                 </div>
             </section>
@@ -130,5 +183,7 @@ if(isset($_POST['submit'])){
 </div>
 
 <?php
-include("includes/footer.php")
+
+include("includes/footer.php");
+ob_end_flush();
 ?>

@@ -1,5 +1,7 @@
 <body id="page-top">
-
+<?php
+ob_start();
+?>
 <!-- Page Wrapper -->
 <div id="wrapper">
 
