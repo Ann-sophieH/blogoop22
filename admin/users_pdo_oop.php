@@ -99,7 +99,7 @@ include("includes/content-top.php");
                                     <td><a href="mailto:lorem@ipsum.be"></a>lorem@ipsum.be</td>
                                     <td><a href="tel:123456789"></a>+123 456 789</td>
                                     <?php foreach($user_roles as $user_role): ;?>
-                                        <td><span class="badge rounded-pill bg-success text-white"><?=  $user_role->role; ?></span></td>
+                                        <td><span class="badge rounded-pill bg-success text-white"><?= (!is_null($user_role))  ? $user_role->role : 'geen rol'; ?></span></td>
                                     <?php endforeach; ?>
                                     <td>12-10-2014</td>
                                     <td>$1200</td>

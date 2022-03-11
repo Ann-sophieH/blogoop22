@@ -1,28 +1,45 @@
 <?php
 include("includes/header.php");
 
-if (!$session->is_signed_in()) {//testen of er een user ingelogd is (is er een session)
-    redirect('login2.php');
+$host = 'localhost';
+$db = 'dbblogoop';
+$user = 'root';
+$password = '';
+$dsn = "mysql:host=$host;dbname=$db;charset=UTF8";
+
+try {
+    $pdo = new PDO($dsn, $user, $password);
+
+    if ($pdo) {
+        echo "Connected to the $db database successfully!";
+    }
+} catch (PDOException $e) {
+    echo $e->getMessage();
 }
+$sql = 'SELECT *
+		FROM users';
 
-$users = User::find_all();
 
+$statement = $pdo->query($sql);
+
+// get all users
+
+$users = $statement->fetchAll(PDO::FETCH_ASSOC); //retouty assoc array
+/*if ($users) {
+    // show the users
+    foreach ($users as $user) {
+        echo $user['first_name'] . '<br>';
+    }
+}*/
 include("includes/sidebar.php");
 include("includes/content-top.php");
+
+
 ?>
-
-
 <div class="col-12 px-0">
     <div class="card">
         <div class="card-body">
-            <?php if($session->message): ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <?php echo $session->message;?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <?php endif; ?>
+
             <div class="d-flex no-block align-items-center mb-4">
                 <h4 class="card-title">All Contacts</h4>
 
@@ -81,8 +98,11 @@ include("includes/content-top.php");
                             </thead>
                             <tbody>
                             <?php foreach ($users as $user):
+                                $sql_rol = 'SELECT role_id FROM user_roles WHERE user_id =' . $user['id'];
+                                $statement_rol = $pdo->query($sql_rol);
+                                $user_roles =  $statement_rol->fetchAll(PDO::FETCH_ASSOC);
 
-                                $user_roles = User::get_user_role($user->id); ?>
+                                ?>
                                 <tr role="row">
                                     <td class="sorting_1">
                                         <div class="form-check">
@@ -91,20 +111,25 @@ include("includes/content-top.php");
                                             <label class="form-check-label" for="customControlValidation2"></label>
                                         </div>
                                     </td>
-                                    <td>
-                                        <img width="60" height="60" src="<?php echo $user->image_path_and_placeholder(); ?>" alt="user" class="rounded-circle img-fluid img-thumbnail">
-                                        <span class="fw-normal"><?php echo $user->first_name . ' ' . $user->last_name; ?></span>
-                                    </td>
-                                    <td><?php echo $user->username; ?></td>
+
+                                    <td><?php echo $user['first_name'] ; ?></td>
+
+                                    <td><?php echo $user['username'] ; ?></td>
                                     <td><a href="mailto:lorem@ipsum.be"></a>lorem@ipsum.be</td>
                                     <td><a href="tel:123456789"></a>+123 456 789</td>
-                                    <?php foreach($user_roles as $user_role): ;?>
-                                        <td><span class="badge rounded-pill bg-success text-white"><?=  $user_role->role; ?></span></td>
+                                   <?php foreach($user_roles as $user_role): ;
+                                       $sql_rol_name = 'SELECT role FROM roles WHERE id =' . $user_role['role_id'];
+                                       $statement_rol_name = $pdo->query($sql_rol_name);
+                                       $user_role_array =  $statement_rol_name->fetchAll(PDO::FETCH_ASSOC);
+
+                                   ?>
+
+                                        <td><span class="badge rounded-pill bg-success text-white"><?= $user_role_array[0]['role']?></span></td>
                                     <?php endforeach; ?>
                                     <td>12-10-2014</td>
                                     <td>$1200</td>
-                                    <td><a href="delete_user.php?id=<?php echo $user->id; ?>" class="btn btn-danger"><i class="far fa-trash-alt"></i></a>
-                                        <a href="edit_user.php?id=<?php echo $user->id; ?>" class="btn btn-warning"><i class="far fa-edit"></i></a></td>
+                                    <td><a href="delete_user.php?id=<?php echo $user['id']; ?>" class="btn btn-danger"><i class="far fa-trash-alt"></i></a>
+                                        <a href="edit_user.php?id=<?php echo $user['id']; ?>" class="btn btn-warning"><i class="far fa-edit"></i></a></td>
                                 </tr>
                             <?php endforeach; ?>
                             </tbody>
@@ -117,8 +142,11 @@ include("includes/content-top.php");
     </div>
 </div>
 
-
 <?php
 
 include("includes/footer.php");
 ?>
+
+
+
+

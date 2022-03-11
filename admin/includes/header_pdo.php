@@ -1,6 +1,5 @@
 <?php
-require_once("init.php");
-
+require_once("init_pdo.php");
 ob_start();
 ?>
 <!DOCTYPE html>
